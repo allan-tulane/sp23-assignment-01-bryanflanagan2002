@@ -14,8 +14,18 @@ def foo(x):
     pass
 
 def longest_run(mylist, key):
-    ### TODO
-    pass
+    c = 0 
+    top = 0
+
+    for i in range(len(mylist)):
+      if(key == mylist[i]) & (mylist[i] == mylist[i-1]):
+        c += 1
+        continue
+      if c > top:
+        top = c
+        c = 1
+
+    return top
 
 
 class Result:
@@ -32,9 +42,53 @@ class Result:
     
     
 def longest_run_recursive(mylist, key):
-    ### TODO
-    pass
+  if len(mylist) == 0:
+    return Result(0, 0, 0, False)
+  if len(mylist) == 1 & mylist[0] == key:
+    return Result(1, 1, 1, True)
+  else:
+    return Result(0, 0, 0, False)
 
+    
+    
+  left = longest_run_recursive(mylist[:len(mylist)//2], key)
+  right = longest_run_recursive(mylist[len(mylist)//2:], key)
+
+  if left.is_entire_range:
+    if(right.left_size + left.longest_size) <= left.longest_size:
+      
+      return Result(left.left_size + right.left_size, right.right_size, left.longest_size, False)
+    else:
+      
+      return Result(left.left_size + right.left_size, right.right_size, (right.left_size + left.longest_size), False)
+
+  elif right.is_entire_range:
+    if(left.right_size + right.longest_size) <= right.longest_size:
+      
+      return Result(left.left_size, right.left_size + left.right_size, right.longest_size, False)
+    else:
+      
+      return Result(left.left_size, right.right_size + left.right_size, (left.right_size + right.longest_size), False)
+
+  else:
+    
+    if(left.right_size + right.left_size) < right.longest_size:
+      
+      return Result(left.left_size, right.right_size, right.longest_size, False)
+      
+    elif (left.right_size + right.left_size) < left.longest_size:
+      
+      return Result(left.left_size, right.right_size, left.longest_size, False)
+    else:
+      
+      return Result(left.left_size, right.right_size, (left.right_size + right.left_size), False) 
+                
+
+  
+      
+  
+
+    
 ## Feel free to add your own tests here.
 def test_longest_run():
     assert longest_run([2,12,12,8,12,12,12,0,12,1], 12) == 3
